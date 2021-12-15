@@ -14,57 +14,134 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `npm test`
+**UseState.js **
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+import React from 'react'
 
-### `npm run build`
+    export default function UseState() {
+      return (
+        <div>
+          <h2>Eliminar UseState</h2>
+          <p>Por favor, escriba el código de seguridad.</p>
+          <input type='text' placeholder='código de seguridad'/>
+          <button>Comprobar</button>
+        </div>
+      )
+    }
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**classState**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    import React, { Component } from 'react'
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    export default class ClassState extends Component {
+      render() {
+    	return (
+    	  <div>
+    		<h2>Eliminar ClassState</h2>
+    		<p>Por favor, escriba el código de seguridad.</p>
+    		<input type='text' placeholder='código de seguridad'/>
+    		<button>Comprobar</button>
+    	  </div>
+    	)
+      }
+    }
 
-### `npm run eject`
+![AppState](https://static.platzi.com/media/user_upload/appStates-f51afbfc-64e3-4bbc-a707-bf7b98c6c3bd.jpg "AppState")
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Manejo de estado en clases
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- En el método constructor utilizamos this.state para definir un objeto cuyas propiedades serán los estados
+- Para poder modificar this y conservar lo que vivía en this de la clase que extendemos se debe llamar a super() dentro del método constructor.
+- Luego debemos recibir las props desde el constructor y enviarle a super todas las propiedades que recibimos, de esta forma no solo vivirán en el constructor de nuestra clase sino también pasar a la clase React.component
+- Una propiedad que viene de React.component es this.setState, con esta modificaremos los estados.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+        class ClassState extends React.Component {
+            constructor(props){
+                super(props);
+                this.state = {
+                    error:false,
+                }
+            }
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+        render () {
+            return (
+                <div>
+                    <h2>Eliminar {this.props.name}</h2>
+                    <p>Por favor, escriba el código de seguridad.</p>
 
-## Learn More
+                    {this.state.error && (
+                        <p>El código es es incorrecto</p>
+                    )}
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+                    <input type='text' placeholder='código de seguridad'/>
+                    <button
+                        // onClick={()=>this.setState({ error: !this.state.error})}
+                        onClick={()=>this.setState(prevState => ({error: !prevState.error}))}
+                    >Comprobar</button>
+                </div>
+            );
+        }
+        }
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### React.useEffect es un método con 2 parámetros:
 
-### Code Splitting
+1. El primero, siempre se usa y es una función a ejecutar.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+2. El segundo, opcional e importante, nos indica cuando se va a ejecutar nuestro primer parámetro. Los posibles valores de este parámetro son:
 
-### Analyzing the Bundle Size
+   1. Ningun valor: esta función se ejecutará cada vez que nuestro componente haga render (es decir, cada vez que haya cambios en cualquiera de nuestros estados).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+   2. Arreglo vacio: nuestro efecto solo se ejecuta una vez, cuando recién hacemos el primer render de nuestro componente.
 
-### Making a Progressive Web App
+   3. Arreglo no vacio: O también podemos enviar un array con distintos elementos para decirle a nuestro efecto que no solo ejecute en el primer render, sino también cuando haya cambios en esos elementos del array.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Estado simple con useState:
 
-### Advanced Configuration
+    // Así se declaran
+    const [ value, setValue ] = React.useState('');
+    const [ error, setError ] = React.useState(false);
+    const [ loading, setLoading ] = React.useState(false);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+    // Así se consumen
+    console.log(loading);
 
-### Deployment
+    // Así se actualizan
+    setLoading(true);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Estado compuesto con useState:
 
-### `npm run build` fails to minify
+    // Así se declaran
+    const [ state, setState ] = React.useState({
+    value: '',
+    error: false,
+    loading: false,
+    });
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+    // Así se consumen
+    console.log(state.loading);
+
+    // Así se actualizan
+    setState({
+       ...state,
+       error: true,
+       loading: false,
+    })
+
+### Estado compuesto con classState (no hay estados simples):
+
+    // Así se declaran
+    constructor(props) {
+       super(props);
+
+       this.state = {
+    	   value: '',
+    	   error: false,
+    	   loading: false,
+       }
+    }
+
+    // Así se consumen
+    console.log(this.state.loading);
+
+    // Así se actualizan
+    this.setState({ error: true, loading: false });
