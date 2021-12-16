@@ -14,9 +14,7 @@ const UseState = ({name}) => {
 
     console.log(state)
 
-    /* const [value, setValue] = React.useState('');
-    const [error, setError] = React.useState(false);
-    const [loading, setLoading] = React.useState(false);
+    /* 
     const [message, setMessage] = React.useState(''); */
 
     /* const onValidation = (e) => {
@@ -24,6 +22,55 @@ const UseState = ({name}) => {
         setMessage('');
         setLoading(true);
     } */
+
+    const onConfirm = () => {
+        setState({
+            ...state,
+            error: false,
+            loading: false,
+            confirmed: true
+        });
+    };
+
+    const onError = () => {
+        setState({
+            ...state,
+            error: true,
+            loading: false
+        });
+    }
+
+    const onWrite =(newValue)=>{
+        setState({
+            ...state,
+            // error: true,
+            // loading: false,
+            value: newValue,
+        });
+    }
+
+    const onCheck = () => {
+        setState({
+            ...state,
+            loading: true,
+        });
+    }
+
+    const onDelete = () => {
+        setState({
+            ...state,
+            deleted: true,
+        });
+    }
+
+    const onReset = () => {
+        setState({
+            ...state,
+            confirmed: false,
+            deleted: false,
+            value: '',
+        });
+    }
 
     //Dos argumentos en useEffect, 1. Funcion 2. Cuando se ejecuta la funcion
     React.useEffect(() => {
@@ -38,18 +85,9 @@ const UseState = ({name}) => {
                 console.log('Haciendo validacion');
                 
                 if(state.value === SECURITY_CODE){
-                    setState({
-                        ...state,
-                        error: false,
-                        loading: false,
-                        confirmed: true
-                    });
+                    onConfirm();
                 }else{
-                    setState({
-                        ...state,
-                        error: true,
-                        loading: false
-                    });
+                    onError();
                 } 
                 
                 console.log('Haciendo validacion');
@@ -84,17 +122,13 @@ const UseState = ({name}) => {
                     placeholder = 'Codigo de seguridad' type="text" 
                     value={state.value}
                     onChange = {(event)=>{
-                        setState({
-                            ...state,
-                            value: event.target.value,
-                        });
+                        onWrite(event.target.value)
                     }}
                     />
                 <button
-                    onClick={()=> setState({
-                        ...state,
-                        loading: true,
-                    })}
+                    onClick={()=> {
+                        onCheck()
+                    }}
                 >Comprobar</button>
             </div>
         );
@@ -104,21 +138,14 @@ const UseState = ({name}) => {
                 <p>Pedimos confirmacion. Estas seguro?</p>
                 <button
                     onClick={() => {
-                        setState({
-                            ...state,
-                            deleted: true,
-                        });
+                        onDelete();
                     }}
                 >
                     Si, eliminar
                 </button>
                 <button
                     onClick={() => {
-                        setState({
-                            ...state,
-                            confirmed: false,
-                            value: '',
-                        });
+                        onReset();
                     }}
                 >
                     No, no lo elimines.
@@ -131,12 +158,7 @@ const UseState = ({name}) => {
                 <p>Eliminado con exito</p>
                 <button
                     onClick={() => {
-                        setState({
-                            ...state,
-                            deleted: false,
-                            confirmed: false,
-                            value: '',
-                        })
+                        onReset();
                     }}
                 >
                     Resetealo, varon
