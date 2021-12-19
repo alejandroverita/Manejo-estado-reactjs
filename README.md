@@ -175,3 +175,14 @@ Necesitan 2 objetos esenciales: los estados compuestos y las acciones.
 - El reducer define los posibles estados por donde pasara nuestra App.
 - Con action type elegimos cual de esos estados queremos disponer con el cambio o evento del usuario.
 - Con action payload damos dinamismo a dicho estado. Será el mismo estado pero le daremos características especiales
+
+**Estados derivados**
+
+- Variables que no se crean su propio **estado** pero dependen de un **estado** anterior
+- No llaman a React.useState para definir su información
+- Utilizan la información que ya habíamos guardado antes en otro estado y a partir de ahí algún calculo, cuenta, registro, etc.
+- Pueden tener la misma convencion de nombres que los estados "normales"
+- Se actualizan automáticamente con los cambios a los estados "normales".
+- Se crean a partir de estados normales
+
+- Se crean con React.useState
